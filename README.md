@@ -30,7 +30,6 @@ pip install -r requirements.txt
     └── recall_report_text.py     
     └── type1.py
     └── type2.py
-├── images 
 ├── llm_finetune
     └── lora                            # lora微调
     └── ptuning                         # ptuning微调
@@ -141,7 +140,7 @@ PDF 文件中不仅有文本数据，还有大量表格数据，如资产负债�
 3. **表格识别**: 利用 camelot-py 库实现基于图像识别的表格提取
 4. **信息过滤**: 非合并报表，调整报表，母公司报表
 
-整个部分的代码在【】
+整个部分的代码在[pdf_process](https://github.com/zhangzg1/Finance_LLM/tree/main/pdf_process)
 
 ### 6.2 问题分类
 
@@ -165,7 +164,7 @@ E: 统计题，需要从题目获取检索条件，在数据集/数据库中进�
 
 F: 开放性问题,包括介绍情况,介绍方法,分析情况,分析影响,什么是 XXX。
 
-微调大模型来完成问题分类的代码在【】或者【】
+微调大模型来完成问题分类的代码在[llm_finetune/lora/CLASSIFY_LORA](https://github.com/zhangzg1/Finance_LLM/tree/main/llm_finetune/lora/CLASSIFY_LORA)或者[llm_finetune/ptuning/CLASSIFY_PTUNING](https://github.com/zhangzg1/Finance_LLM/tree/main/llm_finetune/ptuning/CLASSIFY_PTUNING)
 
 ### 6.3 SQL生成
 
@@ -174,13 +173,13 @@ NL2SQL 微调训练重点任务还是构造训练数据集。这里需要注意�
 1. 基于 SQL 模板生成数据集，但是泛化能力就比较低。
 2. 构建 SQL 问答模板，对字段进行随机填充，然后利用 ChatGPT 等大模型对问题改写，生成数据集，效果相对更好。
 
-无论使用哪一种方法，数据集必须经过人工校验。对于微调来说，数据的质量要求，远大于数据的数量要求。微调大模型来完成 SQL 生成的代码在【】或者【】
+无论使用哪一种方法，数据集必须经过人工校验。对于微调来说，数据的质量要求，远大于数据的数量要求。微调大模型来完成 SQL 生成的代码在[llm_finetune/lora/NL2SQL_LORA](https://github.com/zhangzg1/Finance_LLM/tree/main/llm_finetune/lora/NL2SQL_LORA)或者[llm_finetune/ptuning/NL2SQL_PTUNING](https://github.com/zhangzg1/Finance_LLM/tree/main/llm_finetune/ptuning/NL2SQL_PTUNING)
 
 ### 6.4 关键词抽取
 
 很多场景下，我们都需要通过 prompt，给到大模型来提取关键词。比如，通过提取用户问题中的关键词，我们可以理解用户意图，再按照规则来匹配回答问题的方法。但是对于专业领域，如果像 ChatGLM 这样的模型，不能很好地理解和准确提取专业术语，那么我们就可以微调一个关键词模型，用于在用户提问中提取相关专业的关键词。
 
-关键词提取任务涉及从文本中提取关键词或短语，有助于后面检索相关信息，越精准的提取越能够让返回的信息更加准确。微调大模型来完成关键词抽取的代码在【】或者【】
+关键词提取任务涉及从文本中提取关键词或短语，有助于后面检索相关信息，越精准的提取越能够让返回的信息更加准确。微调大模型来完成关键词抽取的代码在[llm_finetune/lora/KEYWORDS_LORA](https://github.com/zhangzg1/Finance_LLM/tree/main/llm_finetune/lora/KEYWORDS_LORA)或者[llm_finetune/ptuning/KEYWORDS_PTUNING](https://github.com/zhangzg1/Finance_LLM/tree/main/llm_finetune/ptuning/KEYWORDS_PTUNING)
 
 ### 6.5 答案生成
 
@@ -190,5 +189,5 @@ NL2SQL 微调训练重点任务还是构造训练数据集。这里需要注意�
 
 vLLM 是一个基于 Python 的 LLM 推理和服务框架，它的主要优势在于简单易用和性能高效。通过 PagedAttention 技术、连续批处理、CUDA 核心优化以及分布式推理支持，vLLM 能够显著提高 LLM 的推理速度，降低显存占用，更好地满足实际应用需求。vLLM 推理框架使大模型推理速度得到明显提升，推理速度比普通推理有 1 倍的加速。在产品级的部署上，vLLM 既能满足 batch 推理的要求，又能实现高并发下的 continuous batching，在实际产品部署中应用是非常广泛的。
 
-在这个项目中，我们采用 Qwen2-7B-Chat 大模型作为基座模型，分别使用不同数据集微调得到问题分类模型、SQL 生成模型，关键字抽取模型，然后在实现推理的过程中利用 vllm 框架实现单底座 + 多 adapter 的部署模式进行推理，也就是实现了 3 个 lora 模型的 batch 推理，这节省了 GPU 的部署资源。（具体代码【】）
+在这个项目中，我们采用 Qwen2-7B-Chat 大模型作为基座模型，分别使用不同数据集微调得到问题分类模型、SQL 生成模型，关键字抽取模型，然后在实现推理的过程中利用 vllm 框架实现单底座 + 多 adapter 的部署模式进行推理，也就是实现了 3 个 lora 模型的 batch 推理，这节省了 GPU 的部署资源。（具体代码[vllm_lorax.sh](https://github.com/zhangzg1/Finance_LLM/blob/main/vllm_lorax.sh)）
 
