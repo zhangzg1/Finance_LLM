@@ -1,0 +1,18 @@
+CUDA_VISIBLE_DEVICES=0 python src/train_bash.py \
+    --stage sft \
+    --do_train \
+    --model_name_or_path ../../../models/Qwen2-7B-Instruct/ \
+    --dataset no2sql \
+    --template default \
+    --finetuning_type lora \
+    --lora_target q_proj,v_proj \
+    --output_dir ./saves/ckpt-7b/no2sql-v2 \
+    --overwrite_cache \
+    --gradient_accumulation_steps 16 \
+    --per_device_train_batch_size 1 \
+    --lr_scheduler_type cosine \
+    --logging_steps 10 \
+    --save_steps 50 \
+    --learning_rate 1e-4 \
+    --num_train_epochs 5 \
+    --plot_loss
