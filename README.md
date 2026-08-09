@@ -1,3 +1,5 @@
+
+
 # 基于 LLM Lora 微调的金融知识问答系统，主要结合了 PDF解析、LLM微调、vllm 推理优化框架等技术
 
 # 1、介绍
@@ -17,6 +19,8 @@ conda activate finance_llm
 
 # 安装其他依赖包
 pip install -r requirements.txt
+
+# 下载基座模型（ChatGLM3-6B 和 Qwen2-7B-Instruct）并放置于 models/ 目录下
 ```
 
 ## 3、代码结构
@@ -190,4 +194,3 @@ NL2SQL 微调训练重点任务还是构造训练数据集。这里需要注意�
 vLLM 是一个基于 Python 的 LLM 推理和服务框架，它的主要优势在于简单易用和性能高效。通过 PagedAttention 技术、连续批处理、CUDA 核心优化以及分布式推理支持，vLLM 能够显著提高 LLM 的推理速度，降低显存占用，更好地满足实际应用需求。vLLM 推理框架使大模型推理速度得到明显提升，推理速度比普通推理有 1 倍的加速。在产品级的部署上，vLLM 既能满足 batch 推理的要求，又能实现高并发下的 continuous batching，在实际产品部署中应用是非常广泛的。
 
 在这个项目中，我们采用 Qwen2-7B-Chat 大模型作为基座模型，分别使用不同数据集微调得到问题分类模型、SQL 生成模型，关键字抽取模型，然后在实现推理的过程中利用 vllm 框架实现单底座 + 多 adapter 的部署模式进行推理，也就是实现了 3 个 lora 模型的 batch 推理，这节省了 GPU 的部署资源。（具体代码[vllm_lorax.sh](https://github.com/zhangzg1/Finance_LLM/blob/main/vllm_lorax.sh)）
-
